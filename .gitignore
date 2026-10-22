@@ -1,0 +1,19 @@
+# MATLAB / Simulink
+slprj/
+*.slxc
+*.autosave
+*.asv
+*.mexa64
+*.mexw64
+*.mexmaci64
+codegen/
+sccprj/
+
+# Arquivos temporários do Office
+~$*
+.~lock.*
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+.vscode/
