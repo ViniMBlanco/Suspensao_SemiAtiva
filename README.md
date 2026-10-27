@@ -86,12 +86,23 @@ Conversão de amortecimento para corrente: 600 N·s/m → 0 A, 1500 N·s/m → 0
 ## Estrutura do repositório
 
 ```
-├── modelo/      modelo do Simulink (.slx) e funções em MATLAB
+├── modelo/
+│   ├── montar_modelo.m    cria o suspensao_semiativa.slx bloco a bloco
+│   ├── rodar_versao.m     simula uma versão e salva métricas e figuras
+│   └── gerar_pista.m      perfis de pista (lombada, senoide, degrau)
 ├── versoes/     uma pasta por versão (parâmetros + resultados)
 └── docs/        apresentações e figuras
 ```
 
-Por enquanto as pastas `modelo/` e `versoes/` estão vazias: a simulação ainda vai começar.
+## Como rodar
+
+No MATLAB, com a pasta do repositório aberta:
+
+```matlab
+addpath('modelo')
+montar_modelo          % cria modelo/suspensao_semiativa.slx (só na primeira vez)
+rodar_versao('v1')     % simula e salva em versoes/v1/resultados/
+```
 
 ## Como as versões vão ser organizadas
 
