@@ -1,6 +1,7 @@
 # Executar a v1
 
-Na pasta Amortecedor, abra SIMULAR_V1.m no MATLAB e clique em Run (F5).
+Na raiz do repositorio Suspensao_SemiAtiva, abra SIMULAR_V1.m no MATLAB
+e clique em Run (F5).
 Escolha Lombada, Senoide ou Degrau. Aguarde o calculo: o diagrama do
 Simulink e a animacao comparando as suspensoes passiva e semiativa abrirao.
 Na animacao, use Pausar, Reproduzir e Reiniciar para controlar a exibicao.
