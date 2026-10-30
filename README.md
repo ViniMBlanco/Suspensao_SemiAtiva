@@ -96,6 +96,14 @@ Conversão de amortecimento para corrente: 600 N·s/m → 0 A, 1500 N·s/m → 0
 
 ## Como rodar
 
+**A v1 foi executada no MATLAB R2024b** e agora inclui modelo editável, animação comparativa, testes e resultados. Veja a [documentação completa da v1](versoes/v1/README.md).
+
+```matlab
+[T,dados] = main; % executa a v1 e abre a animacao passiva x semiativa
+```
+
+Para somente simular, gerar gráficos e validar: `main('v1',false)`. O `main` reconstrói o modelo; salve suas edições manuais em outra cópia antes de reconstruí-lo.
+
 No MATLAB, com a pasta do repositório aberta:
 
 ```matlab
@@ -105,6 +113,10 @@ rodar_versao('v1')     % simula e salva em versoes/v1/resultados/
 ```
 
 ## Como as versões vão ser organizadas
+
+| Versão | Estado | Principais resultados |
+|---|---|---|
+| [v1](versoes/v1/README.md) | Executada e verificada no R2024b | RMS de aceleração −15,93% na lombada e −2,90% na senoide; degrau com perda de contato prevista, exigindo cautela física |
 
 O **modelo do Simulink fica num lugar só** (`modelo/`). Cada versão ganha uma pasta com o que muda de uma para outra:
 
@@ -128,6 +140,8 @@ Regras:
    ```
 
 3. O `.slx` é um arquivo binário, então o Git não mostra o que mudou dentro dele. Por isso a mensagem do commit e o README da versão precisam explicar a mudança.
+4. Quando a primeira versão existir, este README ganha uma **tabela de versões** comparando parâmetros e resultados.
+
 ## Versões
 
 Melhora do RMS da aceleração da carroceria (semiativa em relação à passiva). Detalhes, gráficos e análise no README de cada versão.

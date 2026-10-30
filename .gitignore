@@ -17,3 +17,12 @@ sccprj/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Sinais brutos reproduziveis (gerados por main / rodar_versao)
+versoes/*/resultados/dados_simulacao.mat
+
+# Arquivos locais de exportacao e reproducao
+*.log
+versoes/*/resultados/comparacao_aceleracoes/*.fig
+versoes/*/resultados/videos/*.mp4
+versoes/*/resultados/videos/*.zip

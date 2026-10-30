@@ -22,7 +22,9 @@ switch tipo
         w = p.amplitude*sin(p.omega*t);
         t_metrica = p.t_metrica;
     case 'degrau'
-        % rampa curta no lugar do degrau ideal (degrau ideal = forca infinita no pneu)
+        % Rampa curta para suavizar o salto de forca do pneu.
+        % No pneu elastico sem amortecimento, um degrau de altura gera forca
+        % finita k_t*altura; nao gera forca infinita.
         w = p.altura*min(max((t - p.t_ini)/p.t_rampa, 0), 1);
         t_metrica = p.t_ini;
 end

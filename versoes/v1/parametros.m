@@ -82,6 +82,11 @@ pistas.lombada = struct('t_final', 8,  't_ini', 1.0, 'duracao', 0.70, 'altura', 
 pistas.senoide = struct('t_final', 15, 'amplitude', 0.10, 'omega', 4.0, 't_metrica', 3.0);
 pistas.degrau  = struct('t_final', 8,  't_ini', 1.0, 'altura', 0.03, 't_rampa', 0.02);
 
+%% Visualizacao (geometria esquematica; nao altera a simulacao)
+visual = struct('escala',4,'velocidade_mapa',10,'fps',30,'reproducao',0.5);
+% velocidade_mapa [m/s] converte tempo em distancia apenas no desenho.
+% Os perfis da v1 continuam definidos no dominio do tempo, sem uma velocidade de veiculo medida.
+
 % pista usada quando o modelo e rodado direto pelo botao Run
 pista_tipo = 'lombada';
 addpath(fullfile(fileparts(mfilename('fullpath')), '..', '..', 'modelo'));

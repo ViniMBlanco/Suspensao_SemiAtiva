@@ -1,4 +1,4 @@
-function montar_modelo()
+function montar_modelo(abrir)
 % MONTAR_MODELO  Cria modelo/suspensao_semiativa.slx bloco a bloco.
 %
 % Rodar de novo sempre que este arquivo mudar. Os blocos usam so nomes de
@@ -10,6 +10,10 @@ function montar_modelo()
 
 mdl = 'suspensao_semiativa';
 pasta = fileparts(mfilename('fullpath'));
+if nargin<1, abrir=true; end
+if evalin('base','exist(''Ts'',''var'')')==0
+    carregar_versao('v1');
+end
 
 if bdIsLoaded(mdl)
     close_system(mdl, 0);
@@ -74,6 +78,8 @@ bloco(mdl, 'simulink/Continuous/State-Space', 'Bobina RL', em(12, 4), ...
 condicao_inicial([mdl '/Bobina RL'], 'i0');
 bloco(mdl, 'simulink/Discrete/Zero-Order Hold', 'AD corrente', em(11, 6), ...
     'SampleTime', 'Ts');
+bloco(mdl, 'simulink/Discrete/Zero-Order Hold', 'DA ZOH', em(12, 5), ...
+    'SampleTime', 'Ts');
 
 %% Valvula proporcional: c = sat(c_min + K_ci*i) filtrado por 1a ordem
 bloco(mdl, 'simulink/Math Operations/Gain', 'K_ci', em(12, 1), 'Gain', 'K_ci');
@@ -114,7 +120,8 @@ ligar(mdl, 'dividir por K_ci/1', 'Limite i_ref/1');
 ligar(mdl, 'Limite i_ref/1', 'Erro corrente/1');
 ligar(mdl, 'AD corrente/1', 'Erro corrente/2');
 ligar(mdl, 'Erro corrente/1', 'PI corrente/1');
-ligar(mdl, 'PI corrente/1', 'Bobina RL/1');
+ligar(mdl, 'PI corrente/1', 'DA ZOH/1');
+ligar(mdl, 'DA ZOH/1', 'Bobina RL/1');
 ligar(mdl, 'Bobina RL/1', 'AD corrente/1');
 
 ligar(mdl, 'Bobina RL/1', 'K_ci/1');
@@ -131,20 +138,27 @@ salvar(mdl, 'Planta semiativa/1', 'x_semi',   em(3, 2));
 salvar(mdl, 'Planta semiativa/2', 'ext_semi', em(3, 6));
 salvar(mdl, 'Skyhook/1',          'c_ref',    em(7, 3));
 salvar(mdl, 'Limite i_ref/1',     'i_ref',    em(10, 3));
-salvar(mdl, 'PI corrente/1',      'v_cmd',    em(12, 3));
+salvar(mdl, 'DA ZOH/1',           'v_cmd',    em(12, 3));
 salvar(mdl, 'Bobina RL/1',        'i_bobina', em(13, 4));
 salvar(mdl, 'Valvula/1',          'c_efetivo', em(8, 0));
 salvar(mdl, 'Planta passiva/1',   'x_pass',   em(3, 8));
 salvar(mdl, 'Planta passiva/2',   'ext_pass', em(3, 9));
+salvar(mdl, 'Sensor ou ideal/1', 'v_controle', em(6, 6));
+salvar(mdl, 'Integrador com fuga/1', 'v_estimada', em(5, 7));
+salvar(mdl, 'AD acelerometros/1', 'a_amostrada', em(4, 7));
+salvar(mdl, 'AD velocidades/1', 'v_ideal', em(4, 8));
 
 try
     Simulink.BlockDiagram.arrangeSystem(mdl);
 catch
     % versoes antigas do MATLAB nao tem o arrange; fica o layout em grade
 end
-
+organizar_diagrama(mdl);
+set_param(mdl,'PostLoadFcn', ...
+    ['addpath(fileparts(get_param(bdroot,''FileName''))); ' ...
+     'if evalin(''base'',''exist(''''Ts'''',''''var'''')'')==0, carregar_versao(''v1''); end']);
 save_system(mdl, fullfile(pasta, [mdl '.slx']));
-open_system(mdl);
+if abrir, open_system(mdl); end
 fprintf('Modelo salvo em %s\n', fullfile(pasta, [mdl '.slx']));
 end
 
