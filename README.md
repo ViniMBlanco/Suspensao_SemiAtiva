@@ -128,7 +128,27 @@ Regras:
    ```
 
 3. O `.slx` é um arquivo binário, então o Git não mostra o que mudou dentro dele. Por isso a mensagem do commit e o README da versão precisam explicar a mudança.
-4. Quando a primeira versão existir, este README ganha uma **tabela de versões** comparando parâmetros e resultados.
+## Versões
+
+Melhora do RMS da aceleração da carroceria (semiativa em relação à passiva). Detalhes, gráficos e análise no README de cada versão.
+
+| Versão | O que mudou | `c_sky` [N·s/m] | Lombada | Senoide | Degrau |
+|---|---|---|---|---|---|
+| [v1](versoes/v1/) | primeira versão, parâmetros da S1 | 3000 | 15,9 % | 2,9 % | 22,8 %* |
+
+\* pneu perde contato com a pista (força normal ≤ 0), resultado não vale.
+
+## Andamento
+
+Marcos da simulação. O cronograma detalhado, com tarefas e responsáveis, fica no documento do grupo.
+
+| Entrega | O que | Status |
+|---|---|---|
+| 30/10 | v1: modelo completo rodando com os parâmetros da S1 | concluído |
+| 06/11 | v2: pista irregular gerada pela ISO 8608 | a fazer |
+| 13/11 | varredura do `c_sky` e escolha do valor | a fazer |
+| 19/11 | v3: versão final do modelo, usada nos resultados | a fazer |
+| 27/11 | apresentação final | a fazer |
 
 ## Documentos
 

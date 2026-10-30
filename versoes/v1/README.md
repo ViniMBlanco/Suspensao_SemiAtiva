@@ -33,13 +33,33 @@ Para mexer no modelo na mão: `run('versoes/v1/parametros.m')`, abrir o `.slx` e
 
 ## Resultados
 
-*A preencher depois de rodar `rodar_versao('v1')`. Os números completos ficam em `resultados/metricas.csv`.*
+Simulação rodada pelo Murilo no Simulink com `c_sky = 3000 N·s/m`. RMS da aceleração da carroceria, **sem ponderação**, contado a partir do início do evento (a janela está indicada em cada gráfico).
 
-| Pista | RMS a_s passiva [m/s²] | RMS a_s semiativa [m/s²] | Melhora | Carga dinâmica no pneu, passiva / semi [N] |
-|---|---|---|---|---|
-| Lombada 5 cm | | | | |
-| Senoide 10 cm, 4 rad/s | | | | |
-| Degrau 3 cm (rampa 20 ms) | | | | |
+| Pista | Janela do RMS | RMS a_s passiva [m/s²] | RMS a_s semiativa [m/s²] | Melhora | Carga dinâmica no pneu, passiva / semi [N] |
+|---|---|---|---|---|---|
+| Lombada 5 cm | 1 a 8 s | 0,572 | 0,481 | 15,9 % | a preencher |
+| Senoide 10 cm, 4 rad/s | 3 a 15 s | 1,473 | 1,430 | 2,9 % | a preencher |
+| Degrau 3 cm (rampa 20 ms) | 1 a 8 s | 0,563 | 0,435 | 22,8 %* | a preencher |
+
+\* No degrau a força normal no pneu chega a ≤ 0, ou seja, o pneu sairia do chão. Como o modelo não simula essa separação, esse número não vale como resultado.
+
+### Lombada
+
+![v1 lombada](resultados/v1_lombada.jpeg)
+
+A semiativa diminui principalmente o maior pico negativo (de −2,65 para −2,2 m/s²) e a oscilação que sobra depois da lombada (perto de 2,2 s), quando a carroceria balança sozinha. É aí que o skyhook mais ajuda. A melhora de 15,9 % ainda fica abaixo dos 30 % do Díaz-Choque (2021), mas o `c_sky` ainda não foi ajustado.
+
+### Senoide
+
+![v1 senoide](resultados/v1_senoide.jpeg)
+
+A senoide de 4 rad/s (≈ 0,64 Hz) fica abaixo da ressonância da carroceria (~1,2 Hz). Nessa faixa a mola é quem mais define o movimento e o amortecedor tem pouco efeito, por isso a melhora é pequena (2,9 %). As pequenas ondulações perto dos picos aparecem quando o skyhook troca entre macio e firme.
+
+### Degrau
+
+![v1 degrau](resultados/v1_degrau.jpeg)
+
+É a maior redução de RMS e a semiativa também corta o primeiro pico (de 8,5 para 5,3 m/s²). Por outro lado, logo depois a semiativa oscila mais que a passiva (perto de 1,12 s) e o modelo marca força normal ≤ 0 por volta de 1,05 s. Isso mostra o conflito conforto × aderência: melhorar a aceleração da carroceria não adianta se a roda perde contato com a pista. Por isso o resultado do degrau só vai ser comparado depois de olhar a carga no pneu.
 
 ## Observações
 
