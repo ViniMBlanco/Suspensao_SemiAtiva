@@ -26,3 +26,10 @@ versoes/*/resultados/dados_simulacao.mat
 versoes/*/resultados/comparacao_aceleracoes/*.fig
 versoes/*/resultados/videos/*.mp4
 versoes/*/resultados/videos/*.zip
+
+# Arquivos editaveis e verificacoes locais regeneraveis da v2
+versoes/v2/resultados/*.fig
+versoes/v2/resultados/exploracao_ganhos/
+versoes/v2/resultados/videos/quadro_video_verificado.png
+# Video de apresentacao entregue com a v2
+!versoes/v2/resultados/videos/v2_iso8608_classeC_72kmh.mp4

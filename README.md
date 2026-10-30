@@ -89,12 +89,16 @@ Conversão de amortecimento para corrente: 600 N·s/m → 0 A, 1500 N·s/m → 0
 ├── modelo/
 │   ├── montar_modelo.m    cria o suspensao_semiativa.slx bloco a bloco
 │   ├── rodar_versao.m     simula uma versão e salva métricas e figuras
-│   └── gerar_pista.m      perfis de pista (lombada, senoide, degrau)
+│   └── gerar_pista.m      perfis de pista (lombada, senoide, degrau, ISO 8608)
 ├── versoes/     uma pasta por versão (parâmetros + resultados)
 └── docs/        apresentações e figuras
 ```
 
 ## Como rodar
+
+**Entrega v2:** abra `SIMULAR_V2.m` e clique em **Run**, ou execute `main('v2',false)`. O script simula cinco trechos de pista ISO 8608 classe C a 72 km/h, gera os resultados e confere a integracao numerica. Veja o [guia da v2](versoes/v2/README.md), o [modelo executavel](versoes/v2/suspensao_semiativa_v2.slx), o [grafico no formato da v1](versoes/v2/resultados/comparacao_aceleracoes/aceleracao_iso8608.png) e o [video de apresentacao](versoes/v2/resultados/videos/v2_iso8608_classeC_72kmh.mp4).
+
+Na media dos cinco trechos, o RMS nao ponderado da aceleracao caiu **19,68%** e o RMS da carga dinamica aumentou aproximadamente **23%**. Houve carga normal nao positiva em alguns instantes; o pneu linear nao representa perda de contato e recontato, limitando a interpretacao fisica. O ganho Skyhook continua em 3000 N s/m. Consulte o [relatorio da v2](versoes/v2/resultados/RELATORIO_V2.md).
 
 **A v1 foi executada no MATLAB R2024b** e agora inclui modelo editável, animação comparativa, testes e resultados. Veja a [documentação completa da v1](versoes/v1/README.md).
 
@@ -117,8 +121,9 @@ rodar_versao('v1')     % simula e salva em versoes/v1/resultados/
 | Versão | Estado | Principais resultados |
 |---|---|---|
 | [v1](versoes/v1/README.md) | Executada e verificada no R2024b | RMS de aceleração −15,93% na lombada e −2,90% na senoide; degrau com perda de contato prevista, exigindo cautela física |
+| [v2](versoes/v2/README.md) | Executada e verificada no R2024b | ISO classe C a 72 km/h, cinco sementes; reducao media de RMS de 19,68%, com aumento da carga dinamica e limitacoes de contato documentadas |
 
-O **modelo do Simulink fica num lugar só** (`modelo/`). Cada versão ganha uma pasta com o que muda de uma para outra:
+Os geradores e scripts compartilhados ficam em `modelo/`. O modelo executavel da v1 permanece em `modelo/suspensao_semiativa.slx`; o da v2 fica em `versoes/v2/suspensao_semiativa_v2.slx`, preservando o arquivo da v1. Cada versao tem parametros, documentacao e resultados em sua pasta:
 
 ```
 versoes/
@@ -159,7 +164,7 @@ Marcos da simulação. O cronograma detalhado, com tarefas e responsáveis, fica
 | Entrega | O que | Status |
 |---|---|---|
 | 30/10 | v1: modelo completo rodando com os parâmetros da S1 | concluído |
-| 06/11 | v2: pista irregular gerada pela ISO 8608 | a fazer |
+| 06/11 | v2: pista irregular gerada pela ISO 8608 | simulacao concluida; resultados e limites de contato documentados |
 | 13/11 | varredura do `c_sky` e escolha do valor | a fazer |
 | 19/11 | v3: versão final do modelo, usada nos resultados | a fazer |
 | 27/11 | apresentação final | a fazer |

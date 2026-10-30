@@ -4,3 +4,6 @@
 *.slx binary
 *.png binary
 *.pptx binary
+*.pdf binary
+*.mp4 binary
+*.jpeg binary

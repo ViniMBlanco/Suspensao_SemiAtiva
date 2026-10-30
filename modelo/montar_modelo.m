@@ -1,4 +1,4 @@
-function montar_modelo(abrir)
+function montar_modelo(abrir, versao_modelo)
 % MONTAR_MODELO  Cria modelo/suspensao_semiativa.slx bloco a bloco.
 %
 % Rodar de novo sempre que este arquivo mudar. Os blocos usam so nomes de
@@ -11,6 +11,12 @@ function montar_modelo(abrir)
 mdl = 'suspensao_semiativa';
 pasta = fileparts(mfilename('fullpath'));
 if nargin<1, abrir=true; end
+if nargin<2, versao_modelo='v1'; end
+if strcmp(versao_modelo,'v2')
+    mdl='suspensao_semiativa_v2';
+    pasta=fullfile(fileparts(pasta),'versoes','v2');
+    carregar_versao('v2');
+end
 if evalin('base','exist(''Ts'',''var'')')==0
     carregar_versao('v1');
 end
@@ -157,6 +163,11 @@ organizar_diagrama(mdl);
 set_param(mdl,'PostLoadFcn', ...
     ['addpath(fileparts(get_param(bdroot,''FileName''))); ' ...
      'if evalin(''base'',''exist(''''Ts'''',''''var'''')'')==0, carregar_versao(''v1''); end']);
+if strcmp(versao_modelo,'v2')
+    set_param(mdl,'PostLoadFcn', ...
+        ['addpath(fullfile(fileparts(get_param(bdroot,''FileName'')),''..'',''..'',''modelo'')); ' ...
+         'carregar_versao(''v2'');']);
+end
 save_system(mdl, fullfile(pasta, [mdl '.slx']));
 if abrir, open_system(mdl); end
 fprintf('Modelo salvo em %s\n', fullfile(pasta, [mdl '.slx']));

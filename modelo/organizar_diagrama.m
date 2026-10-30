@@ -44,7 +44,9 @@ end
 % Os ramos sao ortogonais; retornos inferiores ficam separados da atuacao.
 ls=find_system(m,'FindAll','on','SearchDepth',1,'Type','line');
 Simulink.BlockDiagram.routeLine(ls);
-nota(m,'V1 - SUSPENSAO SEMIATIVA EM CASCATA',[70 10 950 40],16);
+titulo='V1 - SUSPENSAO SEMIATIVA EM CASCATA';
+if strcmp(m,'suspensao_semiativa_v2'), titulo='V2 - SUSPENSAO SEMIATIVA - ISO 8608 CLASSE C'; end
+nota(m,titulo,[70 10 1150 40],16);
 nota(m,'Mesma perturbacao w(t) para as duas suspensoes',[1180 120 1690 145],11);
 nota(m,'Controle externo',[70 300 230 325],11);
 nota(m,'Calibracao inversa',[275 300 440 325],11);

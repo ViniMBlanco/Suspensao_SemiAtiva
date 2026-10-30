@@ -9,6 +9,8 @@ raiz=fileparts(fileparts(mfilename('fullpath')));
 fonte=fullfile(raiz,'versoes',versao,'resultados','dados_simulacao.mat');
 assert(isfile(fonte),'Execute rodar_versao antes de gerar as comparacoes.');
 s=load(fonte,'dados');
+% A v2 guarda cinco realizacoes da mesma pista; a figura de referencia usa a 1.
+if strcmp(versao,'v2'), s.dados=s.dados(1); end
 destino=fullfile(raiz,'versoes',versao,'resultados','comparacao_aceleracoes');
 if ~isfolder(destino), mkdir(destino); end
 figuras=gobjects(1,numel(s.dados));
@@ -18,7 +20,7 @@ for k=1:numel(s.dados)
     rp=sqrt(trapz(tt,ap(sel).^2)/(tt(end)-tt(1)));
     rs=sqrt(trapz(tt,as(sel).^2)/(tt(end)-tt(1)));
     reducao=100*(1-rs/rp);
-    f=figure('Name',['V1 | Aceleracao vertical | ' d.nome], ...
+    f=figure('Name',[upper(versao) ' | Aceleracao vertical | ' d.nome], ...
         'Visible','off','Color','w','Position',[60+20*k 60+20*k 1400 850]); figuras(k)=f;
     tiledlayout(f,2,2,'Padding','compact','TileSpacing','compact');
     a=nexttile([1 2]); curvas(a,t,ap,as);
@@ -27,6 +29,7 @@ for k=1:numel(s.dados)
     b=nexttile; curvas(b,t,ap,as);
     if strcmp(d.nome,'lombada'), xlim(b,[.9 3]);
     elseif strcmp(d.nome,'senoide'), xlim(b,[10 15]);
+    elseif strcmp(d.nome,'iso8608'), xlim(b,[10 13]);
     else, xlim(b,[.98 1.35]); end
     title(b,'Detalhe temporal (zoom; nao altera a janela de RMS)');
     c=nexttile;
@@ -44,8 +47,18 @@ for k=1:numel(s.dados)
     else
         titulo=sprintf('Reducao do RMS: %.2f%%',reducao);
     end
-    title(c,{titulo,sprintf('RMS nao ponderado | janela %.1f a %.1f s',d.t_metrica,t(end))});
-    sgtitle(f,['V1 | ' upper(d.nome) ' | Mesma pista: passiva x semiativa atual']);
+    titulos={titulo,sprintf('RMS nao ponderado | janela %.1f a %.1f s',d.t_metrica,t(end))};
+    if strcmp(d.nome,'iso8608')
+        titulos={titulo,sprintf('Diferenca de RMS: %.5f m/s^2',rp-rs),titulos{2}};
+    end
+    title(c,titulos);
+    cabecalho=[upper(versao) ' | ' upper(d.nome) ' | Mesma pista: passiva x semiativa atual'];
+    if strcmp(d.nome,'iso8608')
+        cabecalho={ ...
+            'V2 | ISO 8608 classe C | 72 km/h | Semente 1 | Passiva x semiativa', ...
+            'Modelo linear: ha instantes com N <= 0; interpretacao fisica limitada'};
+    end
+    sgtitle(f,cabecalho);
     drawnow;
     exportgraphics(f,fullfile(destino,['aceleracao_' d.nome '.png']),'Resolution',150);
     exportgraphics(f,fullfile(fileparts(destino),[versao '_' d.nome '.jpeg']),'Resolution',100);
