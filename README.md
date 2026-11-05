@@ -58,7 +58,7 @@ O controle é em **cascata** e roda num controlador digital com período de amos
    - **aderência:** deformação do pneu;
    - **robustez:** variar o tempo de resposta da válvula e o período de amostragem.
 
-**O que esperamos ver:** a semiativa reduzindo a aceleração da carroceria em relação à passiva, principalmente perto da ressonância da carroceria (~1,2 Hz), sem piorar a aderência. Para ter uma ordem de grandeza, o Díaz-Choque (2021) conseguiu com skyhook uma redução de **41 %** na aceleração RMS na pista ISO e de **30 %** na lombada. A expectativa é que perto da frequência da roda o controle quase não tenha efeito: em `√(k_t/m_u)` existe um ponto invariante, onde a aceleração da carroceria não depende de `c`.
+**O que esperamos ver:** a semiativa reduzindo a aceleração da carroceria em relação à passiva, principalmente perto da ressonância da carroceria (~1,2 Hz), sem piorar a aderência (na v2, com `c_sky` = 3000, a carga no pneu aumentou; isso entra na escolha do `c_sky`). Para ter uma ordem de grandeza, o Díaz-Choque (2021) conseguiu com skyhook uma redução de **41 %** na aceleração RMS na pista ISO e de **30 %** na lombada. A expectativa é que perto da frequência da roda o controle quase não tenha efeito: em `√(k_t/m_u)` existe um ponto invariante, onde a aceleração da carroceria não depende de `c`.
 
 ## Parâmetros de partida (apresentação S1)
 
@@ -86,52 +86,38 @@ Conversão de amortecimento para corrente: 600 N·s/m → 0 A, 1500 N·s/m → 0
 ## Estrutura do repositório
 
 ```
-├── modelo/
-│   ├── montar_modelo.m    cria o suspensao_semiativa.slx bloco a bloco
-│   ├── rodar_versao.m     simula uma versão e salva métricas e figuras
-│   └── gerar_pista.m      perfis de pista (lombada, senoide, degrau, ISO 8608)
-├── versoes/     uma pasta por versão (parâmetros + resultados)
-└── docs/        apresentações e figuras
+├── SIMULAR_V1.m / SIMULAR_V2.m   abrir e clicar em Run para simular cada versão
+├── main.m                        roda uma versão inteira (simulação, gráficos e testes)
+├── modelo/          scripts que montam e rodam o modelo (montar_modelo, rodar_versao,
+│                    gerar_pista, executar_v2…) e o suspensao_semiativa.slx da v1
+├── visualizacao/    gráficos, animação e vídeos
+├── testes/          validação automática de cada versão
+├── versoes/         uma pasta por versão (parâmetros, README, resultados)
+└── docs/            apresentações, cronograma e figuras
 ```
 
 ## Como rodar
 
-**Entrega v2:** abra `SIMULAR_V2.m` e clique em **Run**, ou execute `main('v2',false)`. O script simula cinco trechos de pista ISO 8608 classe C a 72 km/h, gera os resultados e confere a integracao numerica. Veja o [guia da v2](versoes/v2/README.md), o [modelo executavel](versoes/v2/suspensao_semiativa_v2.slx), o [grafico no formato da v1](versoes/v2/resultados/comparacao_aceleracoes/aceleracao_iso8608.png) e o [video de apresentacao](versoes/v2/resultados/videos/v2_iso8608_classeC_72kmh.mp4).
+Precisa de MATLAB + Simulink (usamos o R2024b). Com a pasta do repositório aberta no MATLAB:
 
-Na media dos cinco trechos, o RMS nao ponderado da aceleracao caiu **19,68%** e o RMS da carga dinamica aumentou aproximadamente **23%**. Houve carga normal nao positiva em alguns instantes; o pneu linear nao representa perda de contato e recontato, limitando a interpretacao fisica. O ganho Skyhook continua em 3000 N s/m. Consulte o [relatorio da v2](versoes/v2/resultados/RELATORIO_V2.md).
+- **v1:** abra `SIMULAR_V1.m` e clique em **Run** (escolhe lombada, senoide ou degrau), ou rode `[T,dados] = main;`.
+- **v2:** abra `SIMULAR_V2.m` e clique em **Run**, ou rode `[T,dados] = main('v2',false);`.
 
-**A v1 foi executada no MATLAB R2024b** e agora inclui modelo editável, animação comparativa, testes e resultados. Veja a [documentação completa da v1](versoes/v1/README.md).
+O `main` reconstrói o modelo, então salve suas edições manuais em outra cópia antes. Os detalhes de cada versão estão no README dela.
 
-```matlab
-[T,dados] = main; % executa a v1 e abre a animacao passiva x semiativa
-```
+## Como as versões são organizadas
 
-Para somente simular, gerar gráficos e validar: `main('v1',false)`. O `main` reconstrói o modelo; salve suas edições manuais em outra cópia antes de reconstruí-lo.
-
-No MATLAB, com a pasta do repositório aberta:
-
-```matlab
-addpath('modelo')
-montar_modelo          % cria modelo/suspensao_semiativa.slx (só na primeira vez)
-rodar_versao('v1')     % simula e salva em versoes/v1/resultados/
-```
-
-## Como as versões vão ser organizadas
-
-| Versão | Estado | Principais resultados |
-|---|---|---|
-| [v1](versoes/v1/README.md) | Executada e verificada no R2024b | RMS de aceleração −15,93% na lombada e −2,90% na senoide; degrau com perda de contato prevista, exigindo cautela física |
-| [v2](versoes/v2/README.md) | Executada e verificada no R2024b | ISO classe C a 72 km/h, cinco sementes; reducao media de RMS de 19,68%, com aumento da carga dinamica e limitacoes de contato documentadas |
-
-Os geradores e scripts compartilhados ficam em `modelo/`. O modelo executavel da v1 permanece em `modelo/suspensao_semiativa.slx`; o da v2 fica em `versoes/v2/suspensao_semiativa_v2.slx`, preservando o arquivo da v1. Cada versao tem parametros, documentacao e resultados em sua pasta:
+Cada versão tem uma pasta em `versoes/`:
 
 ```
 versoes/
-└── v1/
+└── vN/
     ├── parametros.m    todos os parâmetros da versão
     ├── README.md       o que mudou, por quê, e as métricas principais
     └── resultados/     figuras e dados (.csv / .mat pequenos)
 ```
+
+O modelo da v1 fica em `modelo/suspensao_semiativa.slx`. A partir da v2, cada versão guarda o seu `.slx` na própria pasta (`versoes/v2/suspensao_semiativa_v2.slx`), para não sobrescrever o da versão anterior.
 
 Regras:
 
@@ -145,17 +131,19 @@ Regras:
    ```
 
 3. O `.slx` é um arquivo binário, então o Git não mostra o que mudou dentro dele. Por isso a mensagem do commit e o README da versão precisam explicar a mudança.
-4. Quando a primeira versão existir, este README ganha uma **tabela de versões** comparando parâmetros e resultados.
 
 ## Versões
 
 Melhora do RMS da aceleração da carroceria (semiativa em relação à passiva). Detalhes, gráficos e análise no README de cada versão.
 
-| Versão | O que mudou | `c_sky` [N·s/m] | Lombada | Senoide | Degrau |
-|---|---|---|---|---|---|
-| [v1](versoes/v1/) | primeira versão, parâmetros da S1 | 3000 | 15,9 % | 2,9 % | 22,8 %* |
+| Versão | O que mudou | `c_sky` [N·s/m] | Lombada | Senoide | Degrau | Pista ISO 8608 |
+|---|---|---|---|---|---|---|
+| [v1](versoes/v1/) | primeira versão, parâmetros da S1 | 3000 | 15,9 % | 2,9 % | 22,8 %* | — |
+| [v2](versoes/v2/) | pista ISO 8608 classe C a 72 km/h, 5 trechos | 3000 | — | — | — | 19,7 %** |
 
 \* pneu perde contato com a pista (força normal ≤ 0), resultado não vale.
+
+\*\* média de 5 trechos. A carga dinâmica no pneu aumentou 23 % e há instantes com força normal ≤ 0; isso entra na escolha do `c_sky`.
 
 ## Andamento
 
@@ -164,7 +152,7 @@ Marcos da simulação. O cronograma detalhado, com tarefas e responsáveis, fica
 | Entrega | O que | Status |
 |---|---|---|
 | 30/10 | v1: modelo completo rodando com os parâmetros da S1 | concluído |
-| 06/11 | v2: pista irregular gerada pela ISO 8608 | simulacao concluida; resultados e limites de contato documentados |
+| 06/11 | v2: pista irregular gerada pela ISO 8608 | concluído |
 | 13/11 | varredura do `c_sky` e escolha do valor | a fazer |
 | 19/11 | v3: versão final do modelo, usada nos resultados | a fazer |
 | 27/11 | apresentação final | a fazer |
@@ -172,6 +160,8 @@ Marcos da simulação. O cronograma detalhado, com tarefas e responsáveis, fica
 ## Documentos
 
 - [Apresentação S1](docs/Apresentacao_S1.pptx)
+- [Cronograma do projeto](docs/Cronograma_Projeto_Suspensao.pdf)
+- [Resumo da pista ISO 8608 (classe C, 72 km/h)](docs/Resumo_ISO8608_ClasseC_72kmh.pdf)
 
 ## Grupo
 
