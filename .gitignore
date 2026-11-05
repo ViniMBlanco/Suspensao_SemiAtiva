@@ -33,3 +33,5 @@ versoes/v2/resultados/exploracao_ganhos/
 versoes/v2/resultados/videos/quadro_video_verificado.png
 # Video de apresentacao entregue com a v2
 !versoes/v2/resultados/videos/v2_iso8608_classeC_72kmh.mp4
+# Relatorio automatico do executar_v2 (o resumo fica no versoes/v2/README.md)
+versoes/v2/resultados/RELATORIO_V2.md
