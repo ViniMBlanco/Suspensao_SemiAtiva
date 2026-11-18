@@ -22,8 +22,27 @@ No modelo atual, o pneu linear bilateral pode produzir força normal negativa e 
 - [Tabela comparativa](resultados/tabela_comparativa.csv), [métricas por cenário e semente](resultados/metricas_por_cenario.csv) e [análise de sensibilidade](resultados/sensibilidade_resumo.csv).
 - [Registro dos testes locais](resultados/verificacao.txt). A pista da semente 1 corresponde ao CSV publicado. Os RMS passivos coincidem com a referência. Nos RMS semiativos do cenário V2, a maior diferença frente ao registro histórico de MATLAB foi de 0,31% nas cinco sementes. Nos cenários publicados aqui, reduzir o passo de 0,5 para 0,25 ms manteve o diagnóstico de contato e alterou as métricas verificadas em menos de 0,10%.
 
+## Conferência no Simulink R2024b
+
+A campanha executou [`SIMULAR_V3.m`](../../SIMULAR_V3.m) com o modelo V2 da revisão [`437b507`](https://github.com/ViniMBlanco/Suspensao_SemiAtiva/tree/437b507e2898ed87fff5f324301ecbcb8999c875). A comparação usa `c_sky = 8000 N·s/m` e `c_pass = 1500 N·s/m`.
+
+| Cenário | Variação no RMS da aceleração | Variação no RMS da carga dinâmica | Trechos com N ≤ 0 passiva / semiativa |
+|---|---:|---:|---:|
+| Lombada de 5 cm | −16,51% | −14,66% | 0/1 · 0/1 |
+| ISO 8608 classe C a 72 km/h, cinco sementes | −13,91% | +13,21% | 2/5 · 5/5 |
+
+Os percentuais da tabela usam as médias dos RMS por semente, como na comparação do integrador independente. A coluna `melhora_media_por_ensaio_pct` do CSV nativo usa a média das melhorias individuais. A varredura nativa inclui os mesmos dez ganhos semiativos e acrescenta a referência de 1500 N·s/m à grade de dez amortecimentos passivos.
+
+Nenhum ganho semiativo manteve força normal positiva nas cinco pistas. Com 8000 N·s/m, a menor força normal calculada foi −811,1 N. A corrente real atingiu 1,577 A na ISO, com referência limitada a 1,5 A. O ganho final depende de uma nova varredura com contato unilateral.
+
+A reprodução da semente 1 da V2 coincidiu com o RMS histórico da aceleração dentro da precisão numérica. Reduzir o passo de 0,5 para 0,25 ms mudou esse RMS em menos de 0,007% na lombada e na primeira pista ISO.
+
+- [Tabela comparativa](resultados/simulink/tabela_comparativa.csv) e [métricas por ensaio](resultados/simulink/metricas_por_ensaio.csv).
+- [Varredura por semente](resultados/simulink/varredura_por_semente.csv), [varredura agregada](resultados/simulink/varredura_media.csv) e [curva conforto × aderência](resultados/simulink/conforto_aderencia.png).
+- [Resposta na lombada](resultados/simulink/lombada.png), [resposta na pista ISO, semente 1](resultados/simulink/iso8608_semente1.png), [validação dos ensaios](resultados/simulink/validacao.csv) e [verificação de referência e convergência](resultados/simulink/convergencia_e_referencia.csv).
+
 ## Reprodução
 
 Na raiz do repositório, execute `python -B modelo/simular_v3.py` para refazer os resultados e `python -B -m unittest discover -s testes -p testar_v3.py` para executar os testes. A rotina usa Python com NumPy 2 e Matplotlib, além de um compilador C acessível como `cc`.
 
-Para conferir no modelo Simulink do grupo, abra uma sessão nova do MATLAB com Simulink, abra [SIMULAR_V3.m](../../SIMULAR_V3.m) e clique em **Run**. Para testar outro ganho, adicione `modelo` ao path e chame `executar_v3_simulink(ganho)`. A rotina reutiliza o modelo V2 e grava as suas saídas em `versoes/v3/resultados/simulink/`. Ela foi conferida estaticamente. A execução nativa ainda depende de MATLAB/Simulink. A criação da tag oficial e a escolha do ganho final dependem da equipe.
+Para conferir no modelo Simulink do grupo, abra uma sessão nova do MATLAB com Simulink, abra [SIMULAR_V3.m](../../SIMULAR_V3.m) e clique em **Run**. Para testar outro ganho, adicione `modelo` ao path e chame `executar_v3_simulink(ganho)`. A rotina reutiliza o modelo V2 e grava as suas saídas em `versoes/v3/resultados/simulink/`. A criação da tag oficial e a escolha do ganho final dependem da equipe.

@@ -48,13 +48,13 @@ O controle é em **cascata** e roda num controlador digital com período de amos
 
 ## O que esperamos da simulação
 
-1. **Implementar** no Simulink o modelo não linear completo: o produto `c(t)·v_rel`, as saturações de `c` e da corrente, a malha de corrente e a parte digital (amostradores e ZOH).
+1. **Implementar** no Simulink o modelo não linear completo: o produto `c(t)·v_rel`, as saturações de `c`, da referência de corrente e da tensão, a malha de corrente e a parte digital (amostradores e ZOH).
 2. **Comparar** a suspensão passiva (`c` fixo) com a semiativa nas mesmas entradas:
    - **lombada** (teste transitório);
    - **pista irregular** gerada pela norma ISO 8608.
 3. **Ajustar** o ganho do skyhook (`c_sky`) e os limites de operação, varrendo os valores e vendo onde o desempenho para de melhorar (superfícies de decisão do Díaz-Choque 2021).
 4. **Validar** com três medidas:
-   - **conforto:** aceleração RMS da carroceria, ponderada pela ISO 2631-1;
+   - **conforto:** aceleração RMS da carroceria, com ponderação Wk da ISO 2631-1 como complemento opcional;
    - **aderência:** deformação do pneu;
    - **robustez:** variar o tempo de resposta da válvula e o período de amostragem.
 
@@ -147,7 +147,7 @@ Melhora do RMS da aceleração da carroceria (semiativa em relação à passiva)
 
 \*\* média de 5 trechos. A carga dinâmica no pneu aumentou 23 % e há instantes com força normal ≤ 0; isso entra na escolha do `c_sky`.
 
-† Ganho de diagnóstico. A varredura comparou dez ganhos skyhook e dez amortecimentos passivos nos mesmos cinco perfis ISO. Nenhum ganho semiativo manteve força normal positiva em todos os trechos. Com 8000 N·s/m, a carga dinâmica RMS subiu 13,1 % na ISO frente à passiva de 1500 N·s/m. A simulação independente passou em seis testes e os RMS semiativos do cenário de referência da v2 ficaram a até 0,31 % dos registros históricos do Simulink. A execução nativa da campanha da v3 continua pendente. A prioridade técnica é modelar o contato unilateral do pneu e repetir a varredura antes de fixar o ganho. [Tabela comparativa](versoes/v3/resultados/tabela_comparativa.csv) · [Conforto × aderência](versoes/v3/resultados/conforto_aderencia.png)
+† Ganho de diagnóstico. A varredura comparou dez ganhos skyhook e dez amortecimentos passivos nos mesmos cinco perfis ISO. Nenhum ganho semiativo manteve força normal positiva em todos os trechos. Com 8000 N·s/m, a carga dinâmica RMS subiu 13,1 % na ISO frente à passiva de 1500 N·s/m. A simulação independente passou em seis testes e os RMS semiativos do cenário de referência da v2 ficaram a até 0,31 % dos registros históricos do Simulink. A execução em Simulink R2024b confirmou o diagnóstico na ISO. A aceleração RMS caiu 13,91%, a carga dinâmica RMS subiu 13,21% e a força normal calculada ficou não positiva em 5/5 pistas semiativas e 2/5 passivas. [Resultados do Simulink](versoes/v3/resultados/simulink/tabela_comparativa.csv) A prioridade técnica é modelar o contato unilateral do pneu e repetir a varredura antes de fixar o ganho. [Tabela comparativa](versoes/v3/resultados/tabela_comparativa.csv) · [Conforto × aderência](versoes/v3/resultados/conforto_aderencia.png)
 
 ## Material da semana final (V4)
 
