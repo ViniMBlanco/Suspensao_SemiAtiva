@@ -1,0 +1,3 @@
+cenario,ensaios,c_sky_Ns_m,c_pass_Ns_m,media_rms_a_pass_m_s2,media_rms_a_semi_m_s2,melhora_media_por_ensaio_pct,media_rms_carga_pass_N,media_rms_carga_semi_N,pior_N_min_pass_N,pior_N_min_semi_N,ensaios_contato_pass,ensaios_contato_semi
+Lombada,1,8000,1500,0.571731596133163,0.47732270049813,16.512800109974,151.000485845282,128.859414780802,2138.55933850403,2166.41701266592,1,1
+ISO 8608,5,8000,1500,1.6901172056562,1.45495793610347,13.9084643939376,802.220852428448,908.165886860888,-331.667443282027,-811.112983503316,3,0

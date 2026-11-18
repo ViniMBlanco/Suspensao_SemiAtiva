@@ -38,6 +38,6 @@ versoes/v2/resultados/RELATORIO_V2.md
 
 # Saídas locais regeneráveis da V3
 versoes/v3/resultados/sinais_*.npz
-versoes/v3/resultados/simulink/
+versoes/v3/resultados/simulink/sinais_*.csv
 modelo/__pycache__/
 testes/__pycache__/
