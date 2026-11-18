@@ -86,7 +86,7 @@ Conversão de amortecimento para corrente: 600 N·s/m → 0 A, 1500 N·s/m → 0
 ## Estrutura do repositório
 
 ```
-├── SIMULAR_V1.m / SIMULAR_V2.m   abrir e clicar em Run para simular cada versão
+├── SIMULAR_V1.m / SIMULAR_V2.m / SIMULAR_V3.m   abrir e clicar em Run
 ├── main.m                        roda uma versão inteira (simulação, gráficos e testes)
 ├── modelo/          scripts que montam e rodam o modelo (montar_modelo, rodar_versao,
 │                    gerar_pista, executar_v2…) e o suspensao_semiativa.slx da v1
@@ -102,6 +102,7 @@ Precisa de MATLAB + Simulink (usamos o R2024b). Com a pasta do repositório aber
 
 - **v1:** abra `SIMULAR_V1.m` e clique em **Run** (escolhe lombada, senoide ou degrau), ou rode `[T,dados] = main;`.
 - **v2:** abra `SIMULAR_V2.m` e clique em **Run**, ou rode `[T,dados] = main('v2',false);`.
+- **v3 exploratória:** abra [SIMULAR_V3.m](SIMULAR_V3.m) no MATLAB para usar o modelo Simulink da v2. Para repetir os resultados publicados com o integrador independente, rode `python -B modelo/simular_v3.py` na raiz do repositório.
 
 O `main` reconstrói o modelo, então salve suas edições manuais em outra cópia antes. Os detalhes de cada versão estão no README dela.
 
@@ -117,7 +118,7 @@ versoes/
     └── resultados/     figuras e dados (.csv / .mat pequenos)
 ```
 
-O modelo da v1 fica em `modelo/suspensao_semiativa.slx`. A partir da v2, cada versão guarda o seu `.slx` na própria pasta (`versoes/v2/suspensao_semiativa_v2.slx`), para não sobrescrever o da versão anterior.
+O modelo da v1 fica em `modelo/suspensao_semiativa.slx`. A partir da v2, cada versão guarda o seu `.slx` na própria pasta (`versoes/v2/suspensao_semiativa_v2.slx`), para preservar o da versão anterior. O estudo exploratório da v3 reutiliza o `.slx` da v2 e fornece o ganho de diagnóstico na chamada da simulação.
 
 Regras:
 
@@ -140,10 +141,23 @@ Melhora do RMS da aceleração da carroceria (semiativa em relação à passiva)
 |---|---|---|---|---|---|---|
 | [v1](versoes/v1/) | primeira versão, parâmetros da S1 | 3000 | 15,9 % | 2,9 % | 22,8 %* | — |
 | [v2](versoes/v2/) | pista ISO 8608 classe C a 72 km/h, 5 trechos | 3000 | — | — | — | 19,7 %** |
+| [v3 exploratória](versoes/v3/) | varredura conforto × aderência e análise de sensibilidade, RK4 independente | 8000† | 16,5 % | — | — | 13,8 %† |
 
 \* pneu perde contato com a pista (força normal ≤ 0), resultado não vale.
 
 \*\* média de 5 trechos. A carga dinâmica no pneu aumentou 23 % e há instantes com força normal ≤ 0; isso entra na escolha do `c_sky`.
+
+† Ganho de diagnóstico. A varredura comparou dez ganhos skyhook e dez amortecimentos passivos nos mesmos cinco perfis ISO. Nenhum ganho semiativo manteve força normal positiva em todos os trechos. Com 8000 N·s/m, a carga dinâmica RMS subiu 13,1 % na ISO frente à passiva de 1500 N·s/m. A simulação independente passou em seis testes e os RMS semiativos do cenário de referência da v2 ficaram a até 0,31 % dos registros históricos do Simulink. A execução nativa da campanha da v3 continua pendente. A prioridade técnica é modelar o contato unilateral do pneu e repetir a varredura antes de fixar o ganho. [Tabela comparativa](versoes/v3/resultados/tabela_comparativa.csv) · [Conforto × aderência](versoes/v3/resultados/conforto_aderencia.png)
+
+## Material da semana final (V4)
+
+O cronograma prevê fechar o modelo na v3. V4 identifica o conjunto de materiais preparado para a etapa seguinte.
+
+- [Seção do relatório sobre implementação no Simulink](docs/semana_final/Implementacao_no_Simulink.md).
+- [Slides de implementação](docs/semana_final/Slides_Implementacao_Simulink.pptx).
+- [Roteiro de revisão, ensaio e parecer técnico](docs/semana_final/Revisao_e_ensaio.md).
+
+A revisão cruzada e o ensaio em grupo estão pendentes. A ponderação opcional Wk continua condicionada ao fechamento das semanas anteriores.
 
 ## Andamento
 
@@ -153,9 +167,9 @@ Marcos da simulação. O cronograma detalhado, com tarefas e responsáveis, fica
 |---|---|---|
 | 30/10 | v1: modelo completo rodando com os parâmetros da S1 | concluído |
 | 06/11 | v2: pista irregular gerada pela ISO 8608 | concluído |
-| 13/11 | varredura do `c_sky` e escolha do valor | a fazer |
-| 19/11 | v3: versão final do modelo, usada nos resultados | a fazer |
-| 27/11 | apresentação final | a fazer |
+| 13/11 | varredura do `c_sky` e escolha do valor | varredura exploratória disponível, ganho final pendente |
+| 19/11 | v3: resultados e fechamento do modelo | resultados diagnósticos disponíveis, fechamento pendente |
+| 27/11 | relatório e apresentação final | materiais de implementação preparados, revisão e ensaio pendentes |
 
 ## Documentos
 

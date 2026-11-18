@@ -1,0 +1,49 @@
+test_convergencia_dos_cenarios_publicados (__main__.Validacao.test_convergencia_dos_cenarios_publicados) ... ok
+test_equilibrio_passivo (__main__.Validacao.test_equilibrio_passivo) ... ok
+test_pista_publicada (__main__.Validacao.test_pista_publicada) ... ok
+test_referencia_iso_cinco_sementes (__main__.Validacao.test_referencia_iso_cinco_sementes) ... ok
+test_referencia_lombada (__main__.Validacao.test_referencia_lombada) ... ok
+test_selecao_rejeita_ganho_sem_contato (__main__.Validacao.test_selecao_rejeita_ganho_sem_contato) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 5.796s
+
+OK
+Convergência | semente 0 | rms_as_m_s2 | erro 0.00000%
+Convergência | semente 0 | rms_carga_N | erro 0.00041%
+Convergência | semente 0 | Nmin_N | erro 0.00045%
+Convergência | semente 1 | rms_as_m_s2 | erro 0.00000%
+Convergência | semente 1 | rms_carga_N | erro 0.00819%
+Convergência | semente 1 | Nmin_N | erro 0.00004%
+Convergência | semente 2 | rms_as_m_s2 | erro 0.00000%
+Convergência | semente 2 | rms_carga_N | erro 0.00837%
+Convergência | semente 2 | Nmin_N | erro 0.00006%
+Convergência | semente 3 | rms_as_m_s2 | erro 0.00002%
+Convergência | semente 3 | rms_carga_N | erro 0.00857%
+Convergência | semente 3 | Nmin_N | erro 0.00001%
+Convergência | semente 4 | rms_as_m_s2 | erro 0.00003%
+Convergência | semente 4 | rms_carga_N | erro 0.00790%
+Convergência | semente 4 | Nmin_N | erro 0.08960%
+Convergência | semente 5 | rms_as_m_s2 | erro 0.00001%
+Convergência | semente 5 | rms_carga_N | erro 0.00840%
+Convergência | semente 5 | Nmin_N | erro 0.00003%
+Semente 1 | passivo | rms_as_m_s2 | erro 0.00000%
+Semente 1 | passivo | rms_carga_N | erro 0.00000%
+Semente 1 | semi | rms_as_m_s2 | erro 0.23324%
+Semente 1 | semi | rms_carga_N | erro 0.15349%
+Semente 2 | passivo | rms_as_m_s2 | erro 0.00000%
+Semente 2 | passivo | rms_carga_N | erro 0.00000%
+Semente 2 | semi | rms_as_m_s2 | erro 0.15386%
+Semente 2 | semi | rms_carga_N | erro 0.18551%
+Semente 3 | passivo | rms_as_m_s2 | erro 0.00000%
+Semente 3 | passivo | rms_carga_N | erro 0.00000%
+Semente 3 | semi | rms_as_m_s2 | erro 0.18891%
+Semente 3 | semi | rms_carga_N | erro 0.14769%
+Semente 4 | passivo | rms_as_m_s2 | erro 0.00000%
+Semente 4 | passivo | rms_carga_N | erro 0.00000%
+Semente 4 | semi | rms_as_m_s2 | erro 0.30598%
+Semente 4 | semi | rms_carga_N | erro 0.15459%
+Semente 5 | passivo | rms_as_m_s2 | erro 0.00000%
+Semente 5 | passivo | rms_carga_N | erro 0.00000%
+Semente 5 | semi | rms_as_m_s2 | erro 0.18506%
+Semente 5 | semi | rms_carga_N | erro 0.19713%

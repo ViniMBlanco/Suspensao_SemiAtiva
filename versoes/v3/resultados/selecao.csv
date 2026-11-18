@@ -1,0 +1,2 @@
+criterio,limite_carga_N,tipo,ganho_Ns_m,n,rms_as_m_s2,rms_carga_N,pico_as_m_s2,curso_max_cm,tempo_N_nao_positivo_s,Nmin_pior_N,N_nao_positiva
+exploratorio_maior_N_min,802.2208524284582,semiativa,8000,5,1.4565079891860102,907.5404655733461,5.1895821142826914,3.3074567062340647,0.033500000000000564,-793.4910837902348,5
