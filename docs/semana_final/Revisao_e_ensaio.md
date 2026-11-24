@@ -43,6 +43,8 @@ O quarto de veículo em paralelo com uma referência passiva é adequado ao obje
 
 ## Resultados para a revisão
 
+O ajuste adotado para a V3 é 4000 N·s/m. A comparação a seguir preserva o histórico exploratório com 8000 N·s/m. Use a tabela nominal e os ensaios de robustez do modelo V3 nos resultados finais do relatório. [Resultados da V3](../../versoes/v3/README.md#resultados-nominais-no-simulink) · [Robustez da V3](../../versoes/v3/README.md#robustez-no-simulink)
+
 A reprodução independente em Python/C, com integração RK4, comparou dez ganhos semiativos e dez amortecimentos passivos em cinco trechos ISO. Todo candidato apresentou força normal não positiva em pelo menos um trecho. O ganho de 8000 N·s/m foi usado nas figuras de diagnóstico por ter o maior valor de força normal mínima no pior trecho entre os ganhos semiativos testados. Essa força mínima ainda ficou em −793,5 N. O estudo deixou a escolha do ganho final em aberto. A execução no Simulink R2024b confirmou o diagnóstico com o mesmo ganho exploratório. Na pista ISO, a aceleração RMS caiu 13,91% e a carga dinâmica RMS subiu 13,21% frente à passiva de 1500 N·s/m. A força normal foi não positiva em 5/5 trechos semiativos e 2/5 passivos. [Resultados do Simulink](../../versoes/v3/resultados/simulink/tabela_comparativa.csv) [Critério e resultado da varredura](../../versoes/v3/resultados/selecao.csv) · [Tabela comparativa](../../versoes/v3/resultados/tabela_comparativa.csv) · [Rotina Simulink](../../modelo/executar_v3_simulink.m)
 
 | Ensaio no integrador independente com o ganho exploratório | Aceleração RMS vs. passiva de 1500 N·s/m | Carga dinâmica RMS vs. passiva | Condição de contato no modelo |

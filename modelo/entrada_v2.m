@@ -1,6 +1,7 @@
-function in=entrada_v2(cfg,pista)
+function in=entrada_v2(cfg,pista,modelo)
 % Parametros explicitos por execucao; nao grava alteracoes no .slx.
-in=Simulink.SimulationInput('suspensao_semiativa_v2');
+if nargin < 3, modelo = 'suspensao_semiativa_v2'; end
+in=Simulink.SimulationInput(modelo);
 nomes=fieldnames(cfg);
 for k=1:numel(nomes), in=in.setVariable(nomes{k},cfg.(nomes{k})); end
 in=in.setVariable('pista',pista);

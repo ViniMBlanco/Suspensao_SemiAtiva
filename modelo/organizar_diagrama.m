@@ -27,7 +27,9 @@ pos(m,'Sensores mecanicos',[1190 540 1430 660]);
 set_param([m '/Sensores mecanicos'],'Orientation','left');
 pos(m,'Suspensao passiva',[1430 790 1620 900]);
 icone(m,'Estrada',"disp('w(t)');");
-icone(m,'Controle Skyhook',"disp('Skyhook continuo');");
+skyhook = "disp('Skyhook continuo');";
+if strcmp(m,'suspensao_semiativa_v3'), skyhook = "disp('Skyhook proporcional');"; end
+icone(m,'Controle Skyhook',skyhook);
 icone(m,'Conversao c-i',"disp('c* -> i_ref');");
 icone(m,'DA',"disp('ZOH');");
 icone(m,'Bobina',"disp('1/(Ls+R)');");
@@ -45,7 +47,14 @@ end
 ls=find_system(m,'FindAll','on','SearchDepth',1,'Type','line');
 Simulink.BlockDiagram.routeLine(ls);
 titulo='V1 - SUSPENSAO SEMIATIVA EM CASCATA';
-if strcmp(m,'suspensao_semiativa_v2'), titulo='V2 - SUSPENSAO SEMIATIVA - ISO 8608 CLASSE C'; end
+amostragem='A/D de corrente - Ts = 1 ms';
+switch m
+    case 'suspensao_semiativa_v2'
+        titulo='V2 - SUSPENSAO SEMIATIVA - ISO 8608 CLASSE C';
+    case 'suspensao_semiativa_v3'
+        titulo='V3 - SUSPENSAO SEMIATIVA - ISO 8608 CLASSE C';
+        amostragem='A/D de corrente - Ts nominal = 1 ms';
+end
 nota(m,titulo,[70 10 1150 40],16);
 nota(m,'Mesma perturbacao w(t) para as duas suspensoes',[1180 120 1690 145],11);
 nota(m,'Controle externo',[70 300 230 325],11);
@@ -55,7 +64,7 @@ nota(m,'D/A',[780 300 870 325],11);
 nota(m,'Bobina RL',[955 300 1100 325],11);
 nota(m,'Valvula proporcional',[1160 320 1390 345],11);
 nota(m,'Planta mecanica',[1430 340 1640 365],11);
-nota(m,'A/D de corrente - Ts = 1 ms',[880 455 1180 480],11);
+nota(m,amostragem,[880 455 1180 480],11);
 nota(m,'MALHA INTERNA: corrente medida -> erro do PI',[460 495 1050 520],12);
 nota(m,'MALHA EXTERNA: aceleracoes -> estimativa de velocidades -> Skyhook',[70 715 1010 745],12);
 nota(m,'REFERENCIA PASSIVA - MESMA ESTRADA',[1100 755 1640 780],12);

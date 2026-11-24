@@ -12,10 +12,10 @@ mdl = 'suspensao_semiativa';
 pasta = fileparts(mfilename('fullpath'));
 if nargin<1, abrir=true; end
 if nargin<2, versao_modelo='v1'; end
-if strcmp(versao_modelo,'v2')
-    mdl='suspensao_semiativa_v2';
-    pasta=fullfile(fileparts(pasta),'versoes','v2');
-    carregar_versao('v2');
+if any(strcmp(versao_modelo, {'v2','v3'}))
+    mdl = sprintf('suspensao_semiativa_%s', versao_modelo);
+    pasta = fullfile(fileparts(pasta), 'versoes', versao_modelo);
+    carregar_versao(versao_modelo);
 end
 if evalin('base','exist(''Ts'',''var'')')==0
     carregar_versao('v1');
@@ -163,10 +163,10 @@ organizar_diagrama(mdl);
 set_param(mdl,'PostLoadFcn', ...
     ['addpath(fileparts(get_param(bdroot,''FileName''))); ' ...
      'if evalin(''base'',''exist(''''Ts'''',''''var'''')'')==0, carregar_versao(''v1''); end']);
-if strcmp(versao_modelo,'v2')
+if any(strcmp(versao_modelo, {'v2','v3'}))
     set_param(mdl,'PostLoadFcn', ...
         ['addpath(fullfile(fileparts(get_param(bdroot,''FileName'')),''..'',''..'',''modelo'')); ' ...
-         'carregar_versao(''v2'');']);
+         sprintf('carregar_versao(''%s'');', versao_modelo)]);
 end
 save_system(mdl, fullfile(pasta, [mdl '.slx']));
 if abrir, open_system(mdl); end

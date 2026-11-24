@@ -102,7 +102,7 @@ Precisa de MATLAB + Simulink (usamos o R2024b). Com a pasta do repositório aber
 
 - **v1:** abra `SIMULAR_V1.m` e clique em **Run** (escolhe lombada, senoide ou degrau), ou rode `[T,dados] = main;`.
 - **v2:** abra `SIMULAR_V2.m` e clique em **Run**, ou rode `[T,dados] = main('v2',false);`.
-- **v3 exploratória:** abra [SIMULAR_V3.m](SIMULAR_V3.m) no MATLAB para usar o modelo Simulink da v2. Para repetir os resultados publicados com o integrador independente, rode `python -B modelo/simular_v3.py` na raiz do repositório.
+- **v3:** abra [SIMULAR_V3.m](SIMULAR_V3.m) no MATLAB para rodar a lombada, cinco pistas ISO, a varredura e a robustez no Simulink. Os detalhes e a reprodução do estudo independente estão no [README da v3](versoes/v3/README.md).
 
 O `main` reconstrói o modelo, então salve suas edições manuais em outra cópia antes. Os detalhes de cada versão estão no README dela.
 
@@ -118,7 +118,7 @@ versoes/
     └── resultados/     figuras e dados (.csv / .mat pequenos)
 ```
 
-O modelo da v1 fica em `modelo/suspensao_semiativa.slx`. A partir da v2, cada versão guarda o seu `.slx` na própria pasta (`versoes/v2/suspensao_semiativa_v2.slx`), para preservar o da versão anterior. O estudo exploratório da v3 reutiliza o `.slx` da v2 e fornece o ganho de diagnóstico na chamada da simulação.
+O modelo da v1 fica em `modelo/suspensao_semiativa.slx`. A partir da v2, cada versão guarda o seu `.slx` na própria pasta (`versoes/v2/suspensao_semiativa_v2.slx`), para preservar o da versão anterior. A v3 tem [modelo próprio](versoes/v3/suspensao_semiativa_v3.slx) com a mesma topologia e o ajuste de 4000 N·s/m em [parâmetros](versoes/v3/parametros.m).
 
 Regras:
 
@@ -141,13 +141,13 @@ Melhora do RMS da aceleração da carroceria (semiativa em relação à passiva)
 |---|---|---|---|---|---|---|
 | [v1](versoes/v1/) | primeira versão, parâmetros da S1 | 3000 | 15,9 % | 2,9 % | 22,8 %* | — |
 | [v2](versoes/v2/) | pista ISO 8608 classe C a 72 km/h, 5 trechos | 3000 | — | — | — | 19,7 %** |
-| [v3 exploratória](versoes/v3/) | varredura conforto × aderência e análise de sensibilidade, RK4 independente | 8000† | 16,5 % | — | — | 13,8 %† |
+| [v3](versoes/v3/) | ganho selecionado e robustez no Simulink | 4000† | 16,4 % | — | — | 18,7 %† |
 
 \* pneu perde contato com a pista (força normal ≤ 0), resultado não vale.
 
 \*\* média de 5 trechos. A carga dinâmica no pneu aumentou 23 % e há instantes com força normal ≤ 0; isso entra na escolha do `c_sky`.
 
-† Ganho de diagnóstico. A varredura comparou dez ganhos skyhook e dez amortecimentos passivos nos mesmos cinco perfis ISO. Nenhum ganho semiativo manteve força normal positiva em todos os trechos. Com 8000 N·s/m, a carga dinâmica RMS subiu 13,1 % na ISO frente à passiva de 1500 N·s/m. A simulação independente passou em seis testes e os RMS semiativos do cenário de referência da v2 ficaram a até 0,31 % dos registros históricos do Simulink. A execução em Simulink R2024b confirmou o diagnóstico na ISO. A aceleração RMS caiu 13,91%, a carga dinâmica RMS subiu 13,21% e a força normal calculada ficou não positiva em 5/5 pistas semiativas e 2/5 passivas. [Resultados do Simulink](versoes/v3/resultados/simulink/tabela_comparativa.csv) A prioridade técnica é modelar o contato unilateral do pneu e repetir a varredura antes de fixar o ganho. [Tabela comparativa](versoes/v3/resultados/tabela_comparativa.csv) · [Conforto × aderência](versoes/v3/resultados/conforto_aderencia.png)
+† Na ISO, a carga dinâmica RMS aumentou 20,45% e a força normal calculada foi não positiva em cinco trechos semiativos e dois passivos. O ganho de 4000 N·s/m corresponde ao compromisso escolhido para o modelo de pneu bilateral. [Curva conforto × aderência](versoes/v3/resultados/simulink_v3/conforto_aderencia.png) · [Robustez no Simulink](versoes/v3/resultados/simulink_v3/robustez_resumo.csv)
 
 ## Material da semana final (V4)
 
@@ -167,8 +167,8 @@ Marcos da simulação. O cronograma detalhado, com tarefas e responsáveis, fica
 |---|---|---|
 | 30/10 | v1: modelo completo rodando com os parâmetros da S1 | concluído |
 | 06/11 | v2: pista irregular gerada pela ISO 8608 | concluído |
-| 13/11 | varredura do `c_sky` e escolha do valor | varredura exploratória disponível, ganho final pendente |
-| 19/11 | v3: resultados e fechamento do modelo | resultados diagnósticos disponíveis, fechamento pendente |
+| 13/11 | varredura do `c_sky` e escolha do valor | ganho de 4000 N·s/m selecionado para a v3 |
+| 19/11 | v3: resultados e fechamento do modelo | modelo, parâmetros e robustez no Simulink publicados |
 | 27/11 | relatório e apresentação final | materiais de implementação preparados, revisão e ensaio pendentes |
 
 ## Documentos

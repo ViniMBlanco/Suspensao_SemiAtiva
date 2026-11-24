@@ -1,0 +1,4 @@
+teste,dt_original_s,dt_comparacao_s,delta_rel_RMS_passivo,delta_rel_RMS_semi,limite_delta_rel_RMS
+V2 versus CSV publicado,0.0005,0.0005,7.7715611723761e-16,2.33146835171283e-15,0.005
+lombada com dt/2,0.0005,0.00025,1.3018635680595e-06,1.81007128419175e-06,0.005
+iso8608 com dt/2,0.0005,0.00025,6.29530783176069e-05,5.61084279446789e-05,0.005
