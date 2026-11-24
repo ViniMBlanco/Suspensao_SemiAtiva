@@ -1,6 +1,9 @@
 function [T,dados] = rodar_versao(versao, tipos)
 % RODAR_VERSAO Simula a versao e salva sinais reais, metricas e figuras.
 %   [T,dados]=rodar_versao('v1'); animar_suspensao(dados(1));
+if strcmp(versao,'v3') && nargin<2
+ [T,~,dados]=executar_v3_simulink; return;
+end
 if strcmp(versao,'v2') && nargin<2
  [T,dados]=executar_v2; return;
 end
@@ -13,8 +16,8 @@ if ~exist(pasta_res,'dir'), mkdir(pasta_res); end
 addpath(pasta_modelo);
 cfg=carregar_versao(versao); mdl='suspensao_semiativa';
 arquivo=fullfile(pasta_modelo,[mdl '.slx']); fontes=dir(fullfile(pasta_modelo,'*.m'));
-if strcmp(versao,'v2')
- mdl='suspensao_semiativa_v2'; arquivo=fullfile(fileparts(pasta_res),[mdl '.slx']);
+if any(strcmp(versao,{'v2','v3'}))
+ mdl=sprintf('suspensao_semiativa_%s',versao); arquivo=fullfile(fileparts(pasta_res),[mdl '.slx']);
 end
 salvo=dir(arquivo);
 if isempty(salvo)||max([fontes.datenum])>salvo.datenum

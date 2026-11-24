@@ -6,6 +6,14 @@ if nargin<1, versao='v1'; end
 if nargin<2, animar=true; end
 raiz=fileparts(mfilename('fullpath'));
 addpath(fullfile(raiz,'modelo'),fullfile(raiz,'visualizacao'),fullfile(raiz,'testes'));
+if strcmp(versao,'v3')
+ [T,~,dados]=executar_v3_simulink;
+ if animar
+  open_system(fullfile(raiz,'versoes','v3','suspensao_semiativa_v3.slx'));
+  animar_suspensao(dados(1));
+ end
+ return;
+end
 if strcmp(versao,'v2')
  [T,dados]=executar_v2;
  if animar
