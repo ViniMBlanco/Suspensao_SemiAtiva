@@ -1,4 +1,4 @@
-function figuras = plotar_comparacao_aceleracoes(versao, abrir)
+function figuras = plotar_comparacao_aceleracoes(versao, abrir, comparacao)
 % Reproduz o formato das figuras comparativas publicadas na v1.
 % plotar_comparacao_aceleracoes('v1') abre as tres janelas.
 % plotar_comparacao_aceleracoes('v1',false) exporta sem deixar janelas abertas.
@@ -6,12 +6,20 @@ function figuras = plotar_comparacao_aceleracoes(versao, abrir)
 if nargin<1, versao='v1'; end
 if nargin<2, abrir=true; end
 raiz=fileparts(fileparts(mfilename('fullpath')));
-fonte=fullfile(raiz,'versoes',versao,'resultados','dados_simulacao.mat');
-assert(isfile(fonte),'Execute rodar_versao antes de gerar as comparacoes.');
-s=load(fonte,'dados');
-% A v2 guarda cinco realizacoes da mesma pista; a figura de referencia usa a 1.
-if strcmp(versao,'v2'), s.dados=s.dados(1); end
-destino=fullfile(raiz,'versoes',versao,'resultados','comparacao_aceleracoes');
+benchmark=nargin>=3;
+if benchmark
+    s.dados=comparacao;
+    destino=fullfile(raiz,'Benchmark');
+    rotulos={'Nossa V3','Modelo ZF SACHS CDC'};
+else
+    fonte=fullfile(raiz,'versoes',versao,'resultados','dados_simulacao.mat');
+    assert(isfile(fonte),'Execute rodar_versao antes de gerar as comparacoes.');
+    s=load(fonte,'dados');
+    % A v2 guarda cinco realizacoes da mesma pista; a figura de referencia usa a 1.
+    if strcmp(versao,'v2'), s.dados=s.dados(1); end
+    destino=fullfile(raiz,'versoes',versao,'resultados','comparacao_aceleracoes');
+    rotulos={'Passiva','Semiativa (ganho 3000)'};
+end
 if ~isfolder(destino), mkdir(destino); end
 figuras=gobjects(1,numel(s.dados));
 for k=1:numel(s.dados)
@@ -19,15 +27,17 @@ for k=1:numel(s.dados)
     sel=t>=d.t_metrica; tt=t(sel);
     rp=sqrt(trapz(tt,ap(sel).^2)/(tt(end)-tt(1)));
     rs=sqrt(trapz(tt,as(sel).^2)/(tt(end)-tt(1)));
+    if benchmark, rp=d.benchmark.rms(1); rs=d.benchmark.rms(2); end
     reducao=100*(1-rs/rp);
     f=figure('Name',[upper(versao) ' | Aceleracao vertical | ' d.nome], ...
         'Visible','off','Color','w','Position',[60+20*k 60+20*k 1400 850]); figuras(k)=f;
     tiledlayout(f,2,2,'Padding','compact','TileSpacing','compact');
-    a=nexttile([1 2]); curvas(a,t,ap,as);
+    a=nexttile([1 2]); curvas(a,t,ap,as,rotulos);
     title(a,'Aceleracao vertical da carroceria - resposta completa');
     xline(a,d.t_metrica,':','Inicio da janela RMS','HandleVisibility','off');
-    b=nexttile; curvas(b,t,ap,as);
-    if strcmp(d.nome,'lombada'), xlim(b,[.9 3]);
+    b=nexttile; curvas(b,t,ap,as,rotulos);
+    if benchmark, xlim(b,d.benchmark.zoom);
+    elseif strcmp(d.nome,'lombada'), xlim(b,[.9 3]);
     elseif strcmp(d.nome,'senoide'), xlim(b,[10 15]);
     elseif strcmp(d.nome,'iso8608'), xlim(b,[10 13]);
     else, xlim(b,[.98 1.35]); end
@@ -35,7 +45,7 @@ for k=1:numel(s.dados)
     c=nexttile;
     barras=bar(c,[rp rs],'FaceColor','flat');
     barras.CData=[.2 .4 .8;0 .55 .3];
-    set(c,'XTick',1:2,'XTickLabel',{'Passiva','Semiativa (ganho 3000)'});
+    set(c,'XTick',1:2,'XTickLabel',rotulos);
     ylabel(c,'RMS da aceleracao [m/s^2]'); ylim(c,[0 1.25*max(rp,rs)]); grid(c,'on');
     text(c,1,rp,sprintf(' %.5f',rp),'HorizontalAlignment','center','VerticalAlignment','bottom');
     text(c,2,rs,sprintf(' %.5f',rs),'HorizontalAlignment','center','VerticalAlignment','bottom');
@@ -51,19 +61,36 @@ for k=1:numel(s.dados)
     if strcmp(d.nome,'iso8608')
         titulos={titulo,sprintf('Diferenca de RMS: %.5f m/s^2',rp-rs),titulos{2}};
     end
-    title(c,titulos);
     cabecalho=[upper(versao) ' | ' upper(d.nome) ' | Mesma pista: passiva x semiativa atual'];
     if strcmp(d.nome,'iso8608')
         cabecalho={ ...
             'V2 | ISO 8608 classe C | 72 km/h | Semente 1 | Passiva x semiativa', ...
             'Modelo linear: ha instantes com N <= 0; interpretacao fisica limitada'};
     end
+    if benchmark
+        if rs<=rp
+            titulo=sprintf('Modelo CDC: %.2f%% menos RMS que a V3',100*(1-rs/rp));
+        else
+            titulo=sprintf('V3: %.2f%% menos RMS que o modelo CDC',100*(1-rp/rs));
+        end
+        titulos={titulo,titulos{end}};
+        cabecalho={d.benchmark.titulo,'Mesmo Skyhook de 4.000 N·s/m e pneu unilateral'};
+    end
+    title(c,titulos);
     sgtitle(f,cabecalho);
     drawnow;
-    exportgraphics(f,fullfile(destino,['aceleracao_' d.nome '.png']),'Resolution',150);
-    exportgraphics(f,fullfile(fileparts(destino),[versao '_' d.nome '.jpeg']),'Resolution',100);
-    savefig(f,fullfile(destino,['aceleracao_' d.nome '.fig']));
-    fprintf('%s: RMS passiva %.8f, semiativa %.8f; reducao %.4f%%\n',d.nome,rp,rs,reducao);
+    if benchmark
+        exportgraphics(f,fullfile(destino,d.benchmark.png),'Resolution',150);
+    else
+        exportgraphics(f,fullfile(destino,['aceleracao_' d.nome '.png']),'Resolution',150);
+        exportgraphics(f,fullfile(fileparts(destino),[versao '_' d.nome '.jpeg']),'Resolution',100);
+        savefig(f,fullfile(destino,['aceleracao_' d.nome '.fig']));
+    end
+    if benchmark
+        fprintf('%s: RMS %s %.8f | %s %.8f\n',d.nome,rotulos{1},rp,rotulos{2},rs);
+    else
+        fprintf('%s: RMS passiva %.8f, semiativa %.8f; reducao %.4f%%\n',d.nome,rp,rs,reducao);
+    end
 end
 if abrir
     set(figuras,'Visible','on'); figure(figuras(1));
@@ -72,10 +99,10 @@ else
 end
 disp('COMPARACOES_DIRETAS_ABERTAS');
 end
-function curvas(ax,t,ap,as)
+function curvas(ax,t,ap,as,rotulos)
 plot(ax,t,ap,'--','Color',[.2 .4 .8],'LineWidth',1.4); hold(ax,'on');
 plot(ax,t,as,'Color',[0 .55 .3],'LineWidth',1.3);
 yline(ax,0,':','HandleVisibility','off');
 xlabel(ax,'Tempo [s]'); ylabel(ax,'a_s [m/s^2]'); grid(ax,'on');
-legend(ax,'Passiva','Semiativa (ganho 3000)','Location','best');
+legend(ax,rotulos{:},'Location','best');
 end

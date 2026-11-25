@@ -16,6 +16,8 @@ uicontrol(fig,'Style','popupmenu','String',{'0.25x','0.5x','1x','2x','4x'}, ...
  'Value',2,'Position',[460 20 80 30],'Callback',@speed);
 status=uicontrol(fig,'Style','text','Position',[570 15 580 35],'FontSize',11);
 cores={[0.25 0.45 0.85],[0.12 0.65 0.42]}; nomes={'Passiva','Semiativa'};
+benchmark=isfield(d,'benchmark');
+if benchmark, nomes={'Nossa V3','Modelo ZF SACHS CDC'}; end
 ax=gobjects(1,2);
 vazio=struct('road',[],'body',[],'wheel',[],'spring',[],'damper',[],'rod',[],'axle',[],'info',[]);
 h=repmat(vazio,1,2);
@@ -68,6 +70,15 @@ function desenhar()
   set(h(jj).damper,'XData',[0.45 0.45],'YData',[yw yw+0.43]);
   set(h(jj).rod,'XData',[0.45 0.45],'YData',[yw+0.25 yc]);
   if jj==1, c=p.cpass; nn=interp1(d.t,d.N_pass,tempo); else, c=y(13); nn=interp1(d.t,d.N_semi,tempo); end
+  if benchmark
+   fd=interp1(d.t,d.benchmark.forca(:,jj),tempo);
+   if nn<=1e-9
+    set(h(jj).info,'String',sprintf('Sem contato | N = 0 N\nForca do amortecedor = %+.0f N',fd),'Color',[0.8 0.1 0.1]);
+   else
+    set(h(jj).info,'String',sprintf('zs=%+.1f mm | zu=%+.1f mm\nN = %.0f N | Forca do amortecedor = %+.0f N',1000*zs,1000*zu,nn,fd),'Color',[0.1 0.1 0.1]);
+   end
+   continue
+  end
   set(h(jj).info,'String',sprintf('zs=%+.1f mm | zu=%+.1f mm\nc=%.0f N s/m',1000*zs,1000*zu,c));
   if nn<=0, set(h(jj).info,'String',sprintf('N = %.0f N: perda de contato prevista\nPneu bilateral: resposta limitada',nn),'Color',[0.8 0.1 0.1]); else, set(h(jj).info,'Color',[0.1 0.1 0.1]); end
  end
