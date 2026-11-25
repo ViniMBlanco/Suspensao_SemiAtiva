@@ -29,9 +29,11 @@ Para a regulagem entre os extremos, usamos interpolação linear. Para o comando
 
 Na lombada, a carroceria vibrou **8,8% menos com o CDC** do que com a V3, e o CDC usou menos curso de suspensão. As três configurações mantiveram contato com o chão. Na pista irregular, a carroceria vibrou **12,9% menos com a V3** do que com o CDC, mas a carga da roda oscilou **6,8% mais**. As duas semiativas perderam contato em todos os cinco trechos. A passiva perdeu contato em dois. Cada valor da pista ISO é a média dos cinco trechos.
 
-![Gráfico comparativo da V3 e do modelo ZF SACHS CDC](comparacao.png)
+![Comparação de aceleração da V3 e do modelo ZF SACHS CDC na lombada](comparacao.png)
 
-[Baixar o vídeo da simulação lado a lado](comparacao.mp4?raw=true). O vídeo mostra a lombada e um recorte da semente 5 da pista irregular em câmera lenta. O gráfico acima resume a campanha inteira.
+[Gráfico da pista irregular, semente 5](comparacao_iso8608.png) · [Print da animação](quadro_animacao.png) · [Vídeo lado a lado](comparacao.mp4?raw=true)
+
+Os gráficos mostram a aceleração ao longo do tempo, um recorte ampliado e o RMS na mesma apresentação da V1 e da V2. O vídeo usa o mesmo renderizador MATLAB das duas versões e mostra a lombada e um recorte da semente 5 em câmera lenta. Para a média dos cinco trechos, use a tabela acima.
 
 ## Validação
 
@@ -47,10 +49,10 @@ Na raiz do repositório, execute com PowerShell 7. O simulador numérico usa C# 
 pwsh -NoProfile -File Benchmark/executar.ps1
 ```
 
-Para gerar novamente o PNG e o MP4, use Python com Pillow, NumPy e FFmpeg com H.264. O script aceita o caminho do executável do FFmpeg e o diretório das fontes como opções.
+Para gerar novamente os PNGs e o MP4, execute a partir da raiz com o MATLAB R2024b. O script usa `animar_suspensao`, `plotar_comparacao_aceleracoes` e `VideoWriter` para recriar as mídias a partir das séries já salvas.
 
 ```powershell
-python Benchmark/gerar_midias.py
+matlab -batch "addpath('Benchmark'); gerar_midias"
 ```
 
 Os CSVs em `dados` guardam os perfis originais de 0,5 ms e a tabela usada na reprodução da V3. Os arquivos `resultados/sinais_*.csv.gz` trazem a pista, deslocamentos, aceleração e forças com amostragem de 1 ms para a animação. As métricas usam o passo completo de 0,125 ms.
